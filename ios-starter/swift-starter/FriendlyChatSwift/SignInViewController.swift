@@ -34,20 +34,42 @@ class SignInViewController: UIViewController {
     // sign in with credentials:
     let email = emailField.text
     let password = passwordField.text
+    
     FIRAuth.auth()?.signInWithEmail(email!, password: password!) { (user, error) in
         if let error = error {
             print(error.localizedDescription)
             return
-        }
+            }
+        
         self.signedIn(user!)
-      }
+        
+        }
     }
+    
   @IBAction func didTapSignUp(sender: AnyObject) {
-    setDisplayName(nil)
+    let email = emailField.text
+    let password = passwordField.text
+    
+    FIRAuth.auth()?.createUserWithEmail(email!, password: password!) { (user, error) in
+        if let error = error {
+            print(error.localizedDescription)
+            return
+        }
+        
+        self.setDisplayName(user!)
+        }
   }
 
   func setDisplayName(user: FIRUser?) {
-    signedIn(nil)
+    let changeRequest = user?.profileChangeRequest()
+    changeRequest!.displayName = user!.email!.componentsSeparatedByString("@")[0]
+    changeRequest?.commitChangesWithCompletion(){ (error) in
+        if let error = error {
+            print(error.localizedDescription)
+            return
+        }
+        self.signedIn(FIRAuth.auth()?.currentUser)
+    }
   }
 
   @IBAction func didRequestPasswordReset(sender: AnyObject) {
@@ -62,3 +84,11 @@ class SignInViewController: UIViewController {
   }
 
 }
+
+
+
+
+
+
+
+
