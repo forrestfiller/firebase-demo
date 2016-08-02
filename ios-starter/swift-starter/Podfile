@@ -9,6 +9,6 @@ pod 'Firebase/Auth'
 pod 'Firebase/Crash'
 pod 'Firebase/Database'
 pod 'Firebase/RemoteConfig'
-
+pod 'FirebaseAuth'
 target 'FriendlyChatSwift' do
 end
